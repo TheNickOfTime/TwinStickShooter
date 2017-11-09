@@ -6,6 +6,8 @@ public class Controller_Player : MonoBehaviour
 {
 	private Rigidbody m_Rig;
 	private Camera m_Cam;
+	private Material m_Mat;
+	private LineRenderer m_LineRen;
 
 	[SerializeField] private Vector3 m_ProjectileTarget;
 
@@ -14,9 +16,12 @@ public class Controller_Player : MonoBehaviour
 	[SerializeField] private float m_ScaleFactor;
 	[SerializeField] private GameObject m_Projectile;
 	[SerializeField] private Gradient m_ColorBySize;
+	[SerializeField] private float m_ShotTimerMax;
+	private float m_ShotTimerCurrent;
 
 	[Header("Stats")]
-	[SerializeField] private int m_SpaceBits;
+	[SerializeField] private int m_SpaceBitsCurrent;
+	[SerializeField] private int m_SpaceBitsMax;
 	[SerializeField] private float m_Scale;
 
 	private Coroutine currentScaleLerp;
@@ -25,11 +30,15 @@ public class Controller_Player : MonoBehaviour
 	{
 		m_Rig = GetComponent<Rigidbody>();
 		m_Cam = Camera.main;
+		m_Mat = GetComponent<Renderer>().material;
+		//m_LineRen = transform.Find("SunBeam").GetComponent<LineRenderer>();
 	}
 
 	private void Start()
 	{
 		Controller_Cursor.ChangeCursorType(CursorType.crosshair);
+
+		StartCoroutine(StartSequence());
 	}
 
 	private void Update()
@@ -39,19 +48,51 @@ public class Controller_Player : MonoBehaviour
 
 		transform.LookAt(m_ProjectileTarget);
 
-		if(Input.GetButton("Fire1"))
+		if(Input.GetButton("Fire1") && m_ShotTimerCurrent <= 0)
 		{
+			m_ShotTimerCurrent = m_ShotTimerMax;
 			GameObject projectile = Instantiate(m_Projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
-			AddSpaceBits(1);
+			projectile.transform.localScale = projectile.transform.localScale * (m_Scale / 5 + 0.1f);
+		}
+		else
+		{
+			m_ShotTimerCurrent -= Time.deltaTime;
+		}
+
+		Collider[] inGravity = Physics.OverlapSphere(transform.position, m_Scale);
+		foreach(Collider col in inGravity)
+		{
+			if(col.tag == "Pickup")
+			{
+				if (col.GetComponent<Rigidbody>() == null)
+				{
+					col.gameObject.AddComponent<Rigidbody>().useGravity = false;
+				}
+				col.GetComponent<Rigidbody>().AddExplosionForce(-50, transform.position, m_Scale);
+			}
 		}
 	}
 
 	public void AddSpaceBits(int amount)
 	{
-		m_SpaceBits += amount;
-		m_Scale = Mathf.Log(m_SpaceBits, 5);
-		//m_Scale = Mathf.Sqrt(m_SpaceBits);
+		m_SpaceBitsCurrent += amount;
+		m_Scale = Mathf.Log(m_SpaceBitsCurrent, 5);
 		SetScale();
+		SetColor();
+	}
+
+	private IEnumerator StartSequence()
+	{
+		yield return new WaitForSecondsRealtime(1);
+		m_SpaceBitsCurrent += 2;
+		//m_Scale = Mathf.Log(m_SpaceBitsCurrent, 5);
+		m_Scale = Mathf.Sqrt(m_SpaceBitsCurrent);
+		StartCoroutine(LerpScale(2.5f));
+	}
+
+	public float GetScale()
+	{
+		return m_Scale;
 	}
 
 	private void SetScale()
@@ -60,14 +101,13 @@ public class Controller_Player : MonoBehaviour
 		{
 			StopCoroutine(currentScaleLerp);
 		}
-		currentScaleLerp = StartCoroutine(LerpScale());
+		currentScaleLerp = StartCoroutine(LerpScale(0.5f));
 	}
 
-	private IEnumerator LerpScale()
+	private IEnumerator LerpScale(float lerpTime)
 	{
 		float currentScale = transform.localScale.x;
 		float targetScale = m_Scale;
-		float lerpTime = 0.2f;
 		float lerpTimer = 0;
 
 		while (lerpTimer < lerpTime)
@@ -78,5 +118,12 @@ public class Controller_Player : MonoBehaviour
 			transform.localScale = Vector3.one * m_Scale;
 			yield return null;
 		}
+	}
+
+	private void SetColor()
+	{
+		float value = Mathf.Lerp(0, 1, (float)m_SpaceBitsCurrent / m_SpaceBitsMax);
+		m_Mat.SetColor("_EmissionColor", m_ColorBySize.Evaluate(value));
+		//m_LineRen.startColor = m_ColorBySize.Evaluate(value);
 	}
 }
