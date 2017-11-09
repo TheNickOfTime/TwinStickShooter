@@ -334,9 +334,10 @@ MonoBehaviour:
     m_NumColorKeys: 5
     m_NumAlphaKeys: 2
   m_ShotTimerMax: 0.15
-  m_SpaceBitsCurrent: 0
   m_SpaceBitsMax: 1000
+  m_SpaceBitsCurrent: 0
   m_Scale: 0
+  m_CurrentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &558948856
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +380,7 @@ SpringJoint:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 558948856}
-  m_ConnectedBody: {fileID: 0}
+  m_ConnectedBody: {fileID: 1300362092}
   m_Anchor: {x: 0, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
@@ -526,7 +527,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
@@ -681,7 +682,7 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 0, b: 0, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -910,7 +911,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
@@ -1681,7 +1682,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
@@ -1697,6 +1698,7 @@ GameObject:
   - component: {fileID: 1955464400}
   - component: {fileID: 1955464399}
   - component: {fileID: 1955464401}
+  - component: {fileID: 1955464402}
   m_Layer: 0
   m_Name: Point (0)
   m_TagString: Untagged
@@ -1749,3 +1751,37 @@ MonoBehaviour:
   showGizmo: 1
   gizmoSize: 0.1
   gizmoColor: {r: 1, g: 0, b: 0, a: 0.5}
+--- !u!59 &1955464402
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1955464398}
+  m_ConnectedBody: {fileID: 762082693}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 0
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
