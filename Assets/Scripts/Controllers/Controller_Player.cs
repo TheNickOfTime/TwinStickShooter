@@ -17,12 +17,13 @@ public class Controller_Player : MonoBehaviour
 	[SerializeField] private GameObject m_Projectile;
 	[SerializeField] private Gradient m_ColorBySize;
 	[SerializeField] private float m_ShotTimerMax;
+	[SerializeField] private int m_SpaceBitsMax;
 	private float m_ShotTimerCurrent;
 
 	[Header("Stats")]
 	[SerializeField] private int m_SpaceBitsCurrent;
-	[SerializeField] private int m_SpaceBitsMax;
 	[SerializeField] private float m_Scale;
+	[SerializeField] private Color m_CurrentColor;
 
 	private Coroutine currentScaleLerp;
 
@@ -48,16 +49,16 @@ public class Controller_Player : MonoBehaviour
 
 		transform.LookAt(m_ProjectileTarget);
 
-		if(Input.GetButton("Fire1") && m_ShotTimerCurrent <= 0)
-		{
-			m_ShotTimerCurrent = m_ShotTimerMax;
-			GameObject projectile = Instantiate(m_Projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
-			projectile.transform.localScale = projectile.transform.localScale * (m_Scale / 5 + 0.1f);
-		}
-		else
-		{
-			m_ShotTimerCurrent -= Time.deltaTime;
-		}
+		//if(Input.GetButton("Fire1") && m_ShotTimerCurrent <= 0)
+		//{
+		//	m_ShotTimerCurrent = m_ShotTimerMax;
+		//	GameObject projectile = Instantiate(m_Projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
+		//	projectile.transform.localScale = projectile.transform.localScale * (m_Scale / 5 + 0.1f);
+		//}
+		//else
+		//{
+		//	m_ShotTimerCurrent -= Time.deltaTime;
+		//}
 
 		Collider[] inGravity = Physics.OverlapSphere(transform.position, m_Scale);
 		foreach(Collider col in inGravity)
@@ -120,10 +121,16 @@ public class Controller_Player : MonoBehaviour
 		}
 	}
 
+	public Color GetColor()
+	{
+		return m_CurrentColor;
+	}
+
 	private void SetColor()
 	{
 		float value = Mathf.Lerp(0, 1, (float)m_SpaceBitsCurrent / m_SpaceBitsMax);
-		m_Mat.SetColor("_EmissionColor", m_ColorBySize.Evaluate(value));
+		m_CurrentColor = m_ColorBySize.Evaluate(value);
+		m_Mat.SetColor("_EmissionColor", m_CurrentColor);
 		//m_LineRen.startColor = m_ColorBySize.Evaluate(value);
 	}
 }
