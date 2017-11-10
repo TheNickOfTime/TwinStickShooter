@@ -299,6 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d218e160d9a5a84fa1432cd84d3e1b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_LineRen: {fileID: 762082690}
   m_ProjectileTarget: {x: 0, y: 0, z: 0}
   m_MoveSpeed: 7
   m_ScaleFactor: 1
@@ -529,6 +530,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
+      propertyPath: m_TagString
+      value: Pickup
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
   m_IsPrefabParent: 0
@@ -548,7 +553,7 @@ GameObject:
   - component: {fileID: 762082692}
   m_Layer: 0
   m_Name: SunBeam
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -912,6 +917,10 @@ Prefab:
     - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
+      propertyPath: m_TagString
+      value: Pickup
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
@@ -1683,6 +1692,10 @@ Prefab:
     - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1882351915897998, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}
+      propertyPath: m_TagString
+      value: Pickup
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 98b5d1c1fa1ca0941bab564bcd88502b, type: 2}

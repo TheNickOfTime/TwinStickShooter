@@ -18,7 +18,7 @@ public class Pickup_Planet : Pickup
 		m_SizeInWorld = GetComponent<Collider>().bounds.size.x;
 	}
 
-	protected override void OnPickup(Transform other)
+	public override void OnPickup(Transform other)
 	{
 		if(other.tag == "Player")
 		{

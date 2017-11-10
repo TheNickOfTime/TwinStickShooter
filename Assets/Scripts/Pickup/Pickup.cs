@@ -25,7 +25,7 @@ public class Pickup : MonoBehaviour
 		}
 	}
 
-	protected virtual void OnPickup(Transform other)
+	public virtual void OnPickup(Transform other)
 	{
 		Debug.Log(name + " has been interacted with");
 	}

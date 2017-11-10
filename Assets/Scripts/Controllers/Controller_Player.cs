@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Controller_Player : MonoBehaviour
 {
+	public static Controller_Player instance;
+
 	private Rigidbody m_Rig;
 	private Camera m_Cam;
 	private Material m_Mat;
-	private LineRenderer m_LineRen;
+	[SerializeField] private LineRenderer m_LineRen;
 
 	[SerializeField] private Vector3 m_ProjectileTarget;
 
@@ -29,10 +31,15 @@ public class Controller_Player : MonoBehaviour
 
 	private void Awake()
 	{
+		if(instance != null)
+		{
+			Destroy(this);
+		}
+		instance = this;
+
 		m_Rig = GetComponent<Rigidbody>();
 		m_Cam = Camera.main;
 		m_Mat = GetComponent<Renderer>().material;
-		//m_LineRen = transform.Find("SunBeam").GetComponent<LineRenderer>();
 	}
 
 	private void Start()
@@ -49,16 +56,22 @@ public class Controller_Player : MonoBehaviour
 
 		transform.LookAt(m_ProjectileTarget);
 
-		//if(Input.GetButton("Fire1") && m_ShotTimerCurrent <= 0)
-		//{
-		//	m_ShotTimerCurrent = m_ShotTimerMax;
-		//	GameObject projectile = Instantiate(m_Projectile, transform.position + (transform.forward * 0.5f), transform.rotation);
-		//	projectile.transform.localScale = projectile.transform.localScale * (m_Scale / 5 + 0.1f);
-		//}
-		//else
-		//{
-		//	m_ShotTimerCurrent -= Time.deltaTime;
-		//}
+		if (Input.GetButton("Fire1"))
+		{
+			Vector3[] array = new Vector3[m_LineRen.positionCount];
+			m_LineRen.GetPositions(array);
+			for (int i = 0; i < array.Length - 1; i++)
+			{
+				RaycastHit hit;
+				if(Physics.Linecast(array[i], array[i + 1], out hit))
+				{
+					if(hit.transform.tag == "Pickup")
+					{
+						hit.transform.GetComponent<Pickup>().OnPickup(m_LineRen.transform);
+					}
+				}
+			}
+		}
 
 		Collider[] inGravity = Physics.OverlapSphere(transform.position, m_Scale);
 		foreach(Collider col in inGravity)

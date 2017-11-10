@@ -107,3 +107,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionTags:
   - Player
+  - Projectile
