@@ -7,6 +7,8 @@ public class Pickup_Planet : Pickup
 	[SerializeField] private int m_BitsToSpawn = 15;
 	[SerializeField] private AnimationCurve m_ExplosionCurve;
 
+	[SerializeField] private AudioClip aClip;
+
 	private GameObject spaceBit;
 	private float m_SizeInWorld;
 
@@ -22,9 +24,12 @@ public class Pickup_Planet : Pickup
 	{
 		GetComponent<Collider>().enabled = false;
 
-		if(other.tag == "Player")
+		AudioSource.PlayClipAtPoint(aClip, transform.position, 2);
+
+		if (other.tag == "Player")
 		{
-			other.GetComponent<Controller_Player>().AddSpaceBits(8);
+			other.GetComponent<Controller_Player>().AddSpaceBits(-Controller_Player.instance.SpaceBits/10);
+			Controller_Player.instance.FlashRed();
 		}
 		else if( other.tag == "Projectile")
 		{
@@ -38,12 +43,14 @@ public class Pickup_Planet : Pickup
 				Quaternion randomRot = Random.rotation;
 
 				GameObject bit = Instantiate(spaceBit, randomPos, randomRot);
+				bit.GetComponent<Pickup_Spacebit>().canParticle = false;
 				Rigidbody rig = bit.AddComponent<Rigidbody>();
 				rig.useGravity = false;
 				rig.AddExplosionForce(25, transform.position, m_SizeInWorld);
 			}
 		}
 		StartCoroutine(LerpSize());
+		PlanetSpawner.instance.Subtract();
 	}
 
 	private IEnumerator LerpSize()

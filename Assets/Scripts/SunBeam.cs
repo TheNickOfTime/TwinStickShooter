@@ -21,17 +21,22 @@ public class SunBeam : MonoBehaviour
 	{
 		m_LineRen.startColor = m_Player.GetComponent<Controller_Player>().GetColor();
 
-		if(Input.GetMouseButton(0))
+		if(Time.time > 1)
 		{
 			m_LastChild.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(m_LastChild.position, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z)), Time.deltaTime * 5.0f));
 		}
-		else
-		{
-			foreach (Transform child in transform)
-			{
-				child.GetComponent<Rigidbody>().velocity = Vector3.zero;
-				child.GetComponent<Rigidbody>().MovePosition(m_FirstChild.transform.position);
-			}
-		}
+
+		// if(Input.GetMouseButton(0))
+		// {
+		// 	m_LastChild.GetComponent<Rigidbody>().MovePosition(Vector3.Lerp(m_LastChild.position, Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z)), Time.deltaTime * 5.0f));
+		// }
+		// else
+		// {
+		// 	foreach (Transform child in transform)
+		// 	{
+		// 		child.GetComponent<Rigidbody>().velocity = Vector3.zero;
+		// 		child.GetComponent<Rigidbody>().MovePosition(m_FirstChild.transform.position);
+		// 	}
+		// }
 	}
 }

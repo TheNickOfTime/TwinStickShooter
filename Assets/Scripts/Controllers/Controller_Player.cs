@@ -16,9 +16,7 @@ public class Controller_Player : MonoBehaviour
 	[Header("Config")]
 	[SerializeField] private float m_MoveSpeed = 1;
 	[SerializeField] private float m_ScaleFactor;
-	[SerializeField] private GameObject m_Projectile;
 	[SerializeField] private Gradient m_ColorBySize;
-	[SerializeField] private float m_ShotTimerMax;
 	[SerializeField] private int m_SpaceBitsMax;
 	private float m_ShotTimerCurrent;
 
@@ -28,6 +26,8 @@ public class Controller_Player : MonoBehaviour
 	[SerializeField] private Color m_CurrentColor;
 
 	private Coroutine currentScaleLerp;
+
+	private bool isAlive = true;
 
 	private void Awake()
 	{
@@ -40,6 +40,8 @@ public class Controller_Player : MonoBehaviour
 		m_Rig = GetComponent<Rigidbody>();
 		m_Cam = Camera.main;
 		m_Mat = GetComponent<Renderer>().material;
+
+		Cursor.lockState = CursorLockMode.Confined;
 	}
 
 	private void Start()
@@ -51,26 +53,23 @@ public class Controller_Player : MonoBehaviour
 
 	private void Update()
 	{
-		m_ProjectileTarget = m_Cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-		m_Rig.velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0) * m_MoveSpeed;
-
-		transform.LookAt(m_ProjectileTarget);
-
-		if (Input.GetButton("Fire1"))
+		if(isAlive)
 		{
+			m_Rig.velocity = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0) * m_MoveSpeed;
+
 			Vector3[] array = new Vector3[m_LineRen.positionCount];
-			m_LineRen.GetPositions(array);
-			for (int i = 0; i < array.Length - 1; i++)
-			{
-				RaycastHit hit;
-				if(Physics.Linecast(array[i], array[i + 1], out hit))
+				m_LineRen.GetPositions(array);
+				for (int i = 0; i < array.Length - 1; i++)
 				{
-					if(hit.transform.tag == "Pickup")
+					RaycastHit hit;
+					if (Physics.Linecast(array[i], array[i + 1], out hit))
 					{
-						hit.transform.GetComponent<Pickup>().OnPickup(m_LineRen.transform);
+						if (hit.transform.tag == "Pickup")
+						{
+							hit.transform.GetComponent<Pickup>().OnPickup(m_LineRen.transform);
+						}
 					}
 				}
-			}
 		}
 
 		Collider[] inGravity = Physics.OverlapSphere(transform.position, m_Scale);
@@ -89,19 +88,28 @@ public class Controller_Player : MonoBehaviour
 
 	public void AddSpaceBits(int amount)
 	{
-		m_SpaceBitsCurrent += amount;
-		m_Scale = Mathf.Log(m_SpaceBitsCurrent, 5);
-		SetScale();
-		SetColor();
+		if(isAlive)
+		{
+			m_SpaceBitsCurrent += amount;
+			if (m_SpaceBitsCurrent >= m_SpaceBitsMax)
+			{
+				GetComponent<Ending>().enabled = true;
+				isAlive = false;
+			}
+
+
+			m_Scale = Mathf.Log(m_SpaceBitsCurrent, 5);
+			SetScale();
+			SetColor();
+		}
+
+		UIManager.instance.SetScoreText(m_SpaceBitsCurrent, m_SpaceBitsMax);
 	}
 
 	private IEnumerator StartSequence()
 	{
 		yield return new WaitForSecondsRealtime(1);
-		m_SpaceBitsCurrent += 2;
-		//m_Scale = Mathf.Log(m_SpaceBitsCurrent, 5);
-		m_Scale = Mathf.Sqrt(m_SpaceBitsCurrent);
-		StartCoroutine(LerpScale(2.5f));
+		AddSpaceBits(2);
 	}
 
 	public float GetScale()
@@ -147,8 +155,32 @@ public class Controller_Player : MonoBehaviour
 		//m_LineRen.startColor = m_ColorBySize.Evaluate(value);
 	}
 
+	public void FlashRed()
+	{
+		StartCoroutine(Hurt());
+	}
+
+	private IEnumerator Hurt()
+	{
+		for(int i = 0; i < 10; i++)
+		{
+			m_Mat.SetColor("_EmissionColor", Color.red);
+			yield return null;
+			m_Mat.SetColor("_EmissionColor", m_CurrentColor);
+			yield return null;
+		}
+	}
+
 	public float GetMoveSpeed()
 	{
 		return m_MoveSpeed;
+	}
+
+	public int SpaceBits
+	{
+		get
+		{
+			return m_SpaceBitsCurrent;
+		}
 	}
 }

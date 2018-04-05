@@ -108,3 +108,4 @@ MonoBehaviour:
   m_InteractionTags:
   - Player
   - Projectile
+  aClip: {fileID: 8300000, guid: f50243317ecfdab4e9890abe14db85cf, type: 3}
