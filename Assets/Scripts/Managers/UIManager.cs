@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
 	{
 		m_PausePanel.SetActive(false);
 		isPaused = false;
-		Time.timeScale = 0;
+		Time.timeScale = 1;
 	}
 
 	public void QuitGame()//Quits game based on if it is the Unity Editor or not
